@@ -15,7 +15,9 @@
     <a href="{{route('post.create')}}" class="list-group-item list-group-item-action">Create Post</a>
 </div>
 
+@admin
 <p class="mb-1">Manage Users</p>
 <div class="list-group">
     <a href="{{route('user.index')}}" class="list-group-item list-group-item-action">Users</a>
 </div>
+@endadmin

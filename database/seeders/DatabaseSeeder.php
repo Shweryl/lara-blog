@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
+use App\Models\Nation;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -19,15 +20,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-         \App\Models\User::factory(10)->create();
 
-         \App\Models\User::factory()->create([
-             'name' => 'Shwe Zin',
-             'email' => 'shwezin@gmail.com',
-             'password'=>Hash::make('shwezin123'),
-         ]);
 
         $this->call([
+            NationSeeder::class,
+            UserSeeder::class,
             CategorySeeder::class,
             PostSeeder::class,
         ]);

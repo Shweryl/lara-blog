@@ -29,7 +29,7 @@
                             <br>
                             <span class="badge bg-dark">{{$category->slug}}</span>
                         </td>
-                        <td>{{\App\Models\User::find($category->user_id)->name}}</td>
+                        <td>{{$category->user->name}}</td>
                         <td>
                             @can('update',$category)
                                 <a href="{{route('category.edit',$category->id)}}" class="btn btn-sm btn-outline-dark">
@@ -44,7 +44,7 @@
                                         <i class="bi bi-trash3"></i>
                                     </button>
                                 </form>
-                                @endcan
+                            @endcan
                         </td>
                         <td>
                             <p class="text-black-50 mb-0">
