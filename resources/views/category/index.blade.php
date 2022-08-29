@@ -15,7 +15,10 @@
                 <tr>
                     <th>#</th>
                     <th>Title</th>
+                    @if(Auth::user()->role !== "author")
                     <th>Owner</th>
+                    @endif
+                    <th>Post Count</th>
                     <th>Control</th>
                     <th>Created_at</th>
                 </tr>
@@ -29,7 +32,10 @@
                             <br>
                             <span class="badge bg-dark">{{$category->slug}}</span>
                         </td>
+                        @if(Auth::user()->role !== "author")
                         <td>{{$category->user->name}}</td>
+                        @endif
+                        <td>{{$category->posts()->count()}}</td>
                         <td>
                             @can('update',$category)
                                 <a href="{{route('category.edit',$category->id)}}" class="btn btn-sm btn-outline-dark">

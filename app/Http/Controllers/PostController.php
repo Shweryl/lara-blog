@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Photo;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
@@ -26,6 +27,7 @@ class PostController extends Controller
         })
             ->when(Auth::user()->isAuthor(),fn($q)=>$q->where("user_id",Auth::id()))
             ->latest('id')
+            ->with('category','user')
             ->paginate(10)->withQueryString();
         return view('post.index',compact('posts'));
     }
@@ -48,6 +50,7 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
+        //return $request;
         $post = new Post();
         $post->title = $request->title;
         $post->slug = Str::slug($request->title);
@@ -61,6 +64,16 @@ class PostController extends Controller
             $post->featured_image = $newName;
         }
         $post->save();
+
+        foreach ($request->photos as $photo){
+            $newName = uniqid()."_post_photo.".$photo->extension();
+            $photo->storeAs("public",$newName);
+
+            $photo = new Photo();
+            $photo->post_id = $post->id;
+            $photo->name = $newName;
+            $photo->save();
+        }
         return redirect()->route('post.index')->with('status',"New Post is added.");
     }
 
@@ -115,6 +128,15 @@ class PostController extends Controller
             $post->featured_image = $newName;
         }
         $post->update();
+        foreach ($request->photos as $photo){
+            $newName = uniqid()."_post_photo.".$photo->extension();
+            $photo->storeAs("public",$newName);
+
+            $photo = new Photo();
+            $photo->post_id = $post->id;
+            $photo->name = $newName;
+            $photo->save();
+        }
         return redirect()->route('post.index')->with('status',"Post is updated.");
     }
 
@@ -131,6 +153,10 @@ class PostController extends Controller
         }
         if(isset($post->featured_image)){
             Storage::delete('public/'.$post->featured_image);
+        }
+        foreach ($post->photos as $photo){
+            Storage::delete('public/'.$photo->name);
+            $photo->delete();
         }
         $post->delete();
         return redirect()->route('post.index')->with('status',"Post is deleted succesfully.");

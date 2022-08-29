@@ -36,10 +36,13 @@
             </div>
             <div class="my-3">
                 @isset($post->featured_image)
-                    <img src="{{asset('storage/'.$post->featured_image)}}" class="w-100" alt="">
+                    <img src="{{asset('storage/'.$post->featured_image)}}" height="100px" class="rounded" alt="">
                 @endisset
             </div>
             <p>{{$post->description}}</p>
+            @foreach($post->photos as $photo)
+                <img src="{{asset('storage/'.$photo->name)}}" height="100px" alt="">
+            @endforeach
         </div>
     </div>
 @endsection
