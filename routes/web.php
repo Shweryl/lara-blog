@@ -21,16 +21,20 @@ use App\Http\Controllers\PageController;
 //    return view('welcome');
 //});
 
-Route::get('/',[PageController::class,'index'])->name('page.index');
-Route::get('/detail/{slug}',[PageController::class,'detail'])->name('page.detail');
-Route::get("/category/{slug}",[PageController::class,'postByCategory'])->name('page.category');
+Route::middleware(['cors'])->group(function(){
+    Route::get('/',[PageController::class,'index'])->name('page.index');
+    Route::get('/detail/{slug}',[PageController::class,'detail'])->name('page.detail');
+    Route::get("/category/{slug}",[PageController::class,'postByCategory'])->name('page.category');
+});
+
+
 
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('cors');
 Route::get('/test', [HomeController::class, 'test'])->name('test');
-Route::middleware("auth")->group(function(){
+Route::middleware(['auth','cors'])->group(function(){
     Route::resource('/category',CategoryController::class);
     Route::resource('/post',PostController::class);
     Route::resource('/photo',\App\Http\Controllers\PhotoController::class);
